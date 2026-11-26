@@ -79,7 +79,7 @@
             (x.pop == null ? 'n/a' : '<span class="pb"><i style="width:' + Math.max(0, Math.min(100, x.pop)) + '%"></i></span>' + x.pop + '%') + '</td><td class="n">' + Math.round(x.wind) + '</td></tr>';
         }).join('');
         return '<h3>Weather at the track ' + badge + '</h3>' +
-          '<p class="wsum"><span>Temperature <b>' + Math.round(tmin) + ' to ' + Math.round(tmax) + ' &deg;C</b></span><span>Rain chance up to <b>' + (pops.length ? Math.max.apply(null, pops) + ' %' : 'n/a (archive)') + '</b></span><span>Gusts up to <b>' + Math.round(gust) + ' km/h</b></span></p>' +
+          '<p class="wsum"><span>Temperature <b>' + Math.round(tmin) + ' to ' + Math.round(tmax) + ' &deg;C</b></span><span>Rain chance up to <b>' + (pops.length ? Math.max.apply(null, pops) + ' %' : 'not in archive data') + '</b></span><span>Gusts up to <b>' + Math.round(gust) + ' km/h</b></span></p>' +
           '<table class="wxt"><caption class="vh">Hourly weather at the track, track time</caption><thead><tr><th scope="col">Hour</th><th scope="col">Sky</th><th scope="col" class="n">Temp</th><th scope="col" class="n">Rain chance</th><th scope="col" class="n">Wind km/h</th></tr></thead><tbody>' + rows + '</tbody></table>' +
           '<p class="wnote">Hours are track time; shaded hours have a session. Wind in km/h. Model value for the circuit point, not a trackside sensor; no asphalt temperature. Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>. Rain radar is not in v1 (open question below).</p>';
       }

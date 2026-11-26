@@ -53,7 +53,7 @@
           return '<div class="hr' + (ses ? ' ses' : '') + '"><span class="t">' + x.h + '</span>' + RW.wxIcon(x.code) + '<b>' + Math.round(x.temp) + '&deg;</b><span class="pp" style="--p:' + p + '">' + (x.pop == null ? 'n/a' : x.pop + '%') + '</span><span class="wd">' + Math.round(x.wind) + '</span></div>';
         }).join('');
         return '<h3>Weather at the track ' + badge + '</h3>' +
-          '<p class="wsum">Temperature <b>' + Math.round(tmin) + ' to ' + Math.round(tmax) + ' &deg;C</b>; rain chance up to <b>' + (pops.length ? Math.max.apply(null, pops) + ' %' : 'n/a (archive)') + '</b>; gusts up to <b>' + Math.round(gust) + ' km/h</b>.</p>' +
+          '<p class="wsum">Temperature <b>' + Math.round(tmin) + ' to ' + Math.round(tmax) + ' &deg;C</b>; rain chance up to <b>' + (pops.length ? Math.max.apply(null, pops) + ' %' : 'not in archive data') + '</b>; gusts up to <b>' + Math.round(gust) + ' km/h</b>.</p>' +
           '<div class="strip" role="group" aria-label="Hourly forecast at the track, track time">' + ribbon + '</div>' +
           '<p class="wnote">Hours are track time; the underlined red hours have a session. In each column: the icon, the temperature, the chance of rain with a bar, and the wind in km/h at the bottom. Model value for the circuit point, not a trackside sensor; no asphalt temperature. Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>. Rain radar is not in v1 (open question below).</p>';
       },
