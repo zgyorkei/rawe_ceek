@@ -1,0 +1,44 @@
+/* Page shell: layout only. A direction sets the --pg-* variables and may restyle anything under .pg. The app itself (.rw) is styled completely by the direction. */
+:root { --pg-bg: #14161a; --pg-fg: #e9eaee; --pg-mut: #9aa0ac; --pg-card: #1d2026; --pg-line: #343943; --pg-acc: #e10600; --pg-font: system-ui, "Segoe UI", sans-serif; --pg-head: var(--pg-font); --pg-r: 10px; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--pg-bg); color: var(--pg-fg); font: 15px/1.5 var(--pg-font); }
+.pg { max-width: 1560px; margin: 0 auto; padding: 22px 22px 60px; }
+.pg a { color: var(--pg-acc); }
+.pg-h { display: flex; flex-wrap: wrap; gap: 14px 30px; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+.pg-k { margin: 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--pg-mut); }
+.pg-h h1 { margin: 2px 0 4px; font: 700 34px/1.1 var(--pg-head); }
+.pg-t { margin: 0; max-width: 70ch; color: var(--pg-mut); }
+.pg-nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.pg-nav a { padding: 6px 12px; border: 1px solid var(--pg-line); border-radius: 99px; color: var(--pg-fg); text-decoration: none; font-size: 13px; }
+.pg-nav a.on { background: var(--pg-fg); color: var(--pg-bg); }
+.pg-c { display: flex; flex-wrap: wrap; gap: 8px 26px; align-items: center; margin: 10px 0 16px; padding: 10px 12px; border: 1px solid var(--pg-line); border-radius: var(--pg-r); background: var(--pg-card); }
+.pg-cg { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pg-cg > span { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--pg-mut); margin-right: 4px; }
+.pg-cg button, .pg-act button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 99px; border: 1px solid var(--pg-line); background: transparent; color: var(--pg-fg); cursor: pointer; }
+.pg-cg button.on, .pg-act button { background: var(--pg-fg); color: var(--pg-bg); border-color: var(--pg-fg); }
+.pg-n { margin: 0; flex-basis: 100%; font-size: 12.5px; color: var(--pg-mut); }
+.pg-frames { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-start; }
+.fw { margin: 0; }
+.fw figcaption { margin: 0 0 6px 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--pg-mut); }
+.fw.pc { flex: 1 1 880px; min-width: 880px; }
+.fw.phone { flex: 0 0 392px; width: 392px; }
+.frame { position: relative; height: 800px; overflow: hidden; border: 1px solid var(--pg-line); border-radius: 12px; }
+.fw.phone .frame { border: 7px solid #000; border-radius: 38px; box-shadow: 0 0 0 1px var(--pg-line); }
+.rw { position: absolute; inset: 0; overflow: hidden; }
+.pg[data-dev="pc"] .fw.phone, .pg[data-dev="phone"] .fw.pc { display: none; }
+.pg-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; margin: 26px 0; }
+.pg-info h2, .pg-q h2 { font: 700 20px/1.2 var(--pg-head); margin: 0 0 8px; }
+.pg-info ul { margin: 0; padding-left: 18px; } .pg-info li { margin: 4px 0; }
+.pg-q { max-width: 920px; margin-top: 30px; }
+.q { margin: 14px 0; padding: 14px 16px; border: 1px solid var(--pg-line); border-radius: var(--pg-r); background: var(--pg-card); }
+.q h3 { margin: 0 0 8px; font: 600 15.5px/1.4 var(--pg-font); }
+.q h3 span { display: inline-block; min-width: 38px; margin-right: 8px; padding: 1px 8px; border-radius: 99px; background: var(--pg-fg); color: var(--pg-bg); font-size: 12px; text-align: center; }
+.q .opts { display: grid; gap: 4px; margin-bottom: 8px; }
+.q .opts label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+.q .cm { display: block; } .q .cm span { display: block; font-size: 12px; color: var(--pg-mut); margin-bottom: 2px; }
+.q textarea { width: 100%; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--pg-line); background: var(--pg-bg); color: var(--pg-fg); resize: vertical; }
+.pg-act { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0; }
+.pg-act button { padding: 9px 18px; font-weight: 600; font-size: 14px; }
+.pg details { margin: 6px 0; } .pg pre { white-space: pre-wrap; font: 12.5px/1.45 ui-monospace, Consolas, monospace; background: var(--pg-card); padding: 12px; border-radius: 8px; border: 1px solid var(--pg-line); }
+.pg-f { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--pg-line); font-size: 12.5px; color: var(--pg-mut); max-width: 100ch; }
