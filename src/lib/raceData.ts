@@ -67,6 +67,8 @@ export interface Round {
   countryCode: string;
   /** IANA zone of the circuit. */
   timeZone: string;
+  /** The circuit's key in the service's own table (service/sync/circuits.mjs): how rounds of two series are matched. */
+  circuitKey?: string;
   lat: number | null;
   long: number | null;
   /** The weekend's circuit-local dates (YYYY-MM-DD). */
@@ -112,6 +114,10 @@ export interface ResultDoc {
   state: 'provisional' | 'final';
   fetchedAt: string;
   rows: ResultRow[];
+  /** One line from a fixed template over the rows (service/sync/texts.mjs), never AI written (decision D3). */
+  summary?: string;
+  /** The source as the app credits it, and where it was read. */
+  source?: { name: string; url: string };
 }
 
 export interface StandingsDoc {
