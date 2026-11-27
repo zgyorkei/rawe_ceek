@@ -152,7 +152,7 @@ export function syncRunner(o) {
  *   POST /fetch-now  202 when a run started, 409 while one is under way
  *   GET  /last       the last run's time and outcome, or null
  * @param {ReturnType<typeof syncRunner>} runner @param {AbortSignal} signal
- * @returns {import('desktop-kit/service').RunningService['http']}
+ * @returns {NonNullable<import('desktop-kit/service').RunningService['http']>}
  */
 export function syncRoutes(runner, signal) {
   return (req, res, next) => {
