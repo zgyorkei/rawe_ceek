@@ -134,6 +134,10 @@ export interface SyncMeta {
   versions: Partial<Record<SeriesId, string>>;
   /** Free notes about the sources of the last sync. */
   sourceNotes?: string;
+  /** ISO 8601 UTC: when the daily run last read the calendars. */
+  lastCalendarAt?: string;
+  /** What failed in the last run that wrote this document (a source's redesign, a site down), at most 20. */
+  errors?: { series: SeriesId; at: string; what: string; message: string }[];
 }
 
 /** settings/notifications (RW.RESEARCH 5.4). Written by the page, applied by the sender. */

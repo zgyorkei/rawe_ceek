@@ -14,8 +14,15 @@ import { localDateOf } from './time.mjs';
 /** @typedef {import('./http.mjs').Get} Get */
 
 /**
- * What a source's calls get: the polite getter and the clock.
- * @typedef {{ get: Get, now: () => Date }} SourceDeps
+ * An AI repair step (service/sync/ai.mjs), given only to the WEC source (RW.RESEARCH 1.8 and 9.4; decision D3 keeps it
+ * off F1, F2, F3 and F1 Academy): the page's text and what to read from it; it answers the rows as plain JSON, or null.
+ * The source validates what comes back as it validates its own parse.
+ * @typedef {(task: { series: SeriesId, what: 'results' | 'standings', url: string, text: string }) => Promise<unknown>} Repair
+ */
+
+/**
+ * What a source's calls get: the polite getter, the clock, and (the WEC only, when the user set a key) the AI repair.
+ * @typedef {{ get: Get, now: () => Date, repair?: Repair }} SourceDeps
  */
 
 /**
