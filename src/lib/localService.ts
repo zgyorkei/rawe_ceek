@@ -28,3 +28,62 @@ export const ownServices = (health: ServiceHealth) => health.services.filter((s)
 export function serviceRoute(service: string, path: string): string {
   return `${SERVICE_URL}/services/${encodeURIComponent(service)}/${path.replace(/^\/+/, '')}`;
 }
+
+/** The data sync's service (service/rawe-ceek-daily.mjs): a leased service, so it answers only on the PC that holds the lease. */
+export const SYNC_SERVICE = 'rawe-ceek-daily';
+
+/** One error of a sync run: a source's (its series named) or the run's own (no key file, Firestore unreachable). */
+export interface SyncRunError {
+  series: string | null;
+  at: string;
+  what: string;
+  message: string;
+}
+
+/** How one sync run ended. */
+export interface SyncRun {
+  kind: 'calendar' | 'results';
+  trigger: 'schedule' | 'fetch-now';
+  startedAt: string;
+  endedAt: string;
+  ok: boolean;
+  written: number;
+  errors: SyncRunError[];
+}
+
+/** The sync's status as GET /services/rawe-ceek-daily/status answers it: never a key, only whether each is set. */
+export interface SyncStatus {
+  running: { kind: 'calendar' | 'results'; trigger: 'schedule' | 'fetch-now'; startedAt: string } | null;
+  last: SyncRun | null;
+  lastCalendar: SyncRun | null;
+  keySet: boolean;
+  aiRepair: boolean;
+  schedule: { dailyAt: string; resultsEveryMinutes: number };
+  series: string[];
+}
+
+/** The sync's status on this PC, or null when the sync does not answer here (not on, or another PC holds the lease). */
+export async function syncStatus(fetcher: typeof fetch = fetch, timeoutMs = 1500): Promise<SyncStatus | null> {
+  try {
+    const r = await fetcher(serviceRoute(SYNC_SERVICE, 'status'), { signal: AbortSignal.timeout(timeoutMs) });
+    if (!r.ok) return null;
+    return (await r.json()) as SyncStatus;
+  } catch {
+    return null;
+  }
+}
+
+/** What "Fetch now" got: started, already running, or no answer (the sync is not on this PC). */
+export type FetchNowResult = 'started' | 'running' | 'unreachable';
+
+/** Asks the sync on this PC to run the daily sync now (the calendars, past results and the standings). */
+export async function fetchNow(fetcher: typeof fetch = fetch, timeoutMs = 5000): Promise<FetchNowResult> {
+  try {
+    const r = await fetcher(serviceRoute(SYNC_SERVICE, 'fetch-now'), { method: 'POST', signal: AbortSignal.timeout(timeoutMs) });
+    if (r.status === 202) return 'started';
+    if (r.status === 409) return 'running';
+    return 'unreachable';
+  } catch {
+    return 'unreachable';
+  }
+}
