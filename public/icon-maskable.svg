@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Rawe Ceek</title>
+  <rect width="512" height="512" fill="#1f2a24"/>
+  <rect x="156" y="172" width="200" height="168" rx="26" fill="none" stroke="#f4f1ea" stroke-width="20"/>
+  <path d="M156 216h200" stroke="#f4f1ea" stroke-width="20"/>
+  <circle cx="256" cy="278" r="30" fill="#7fb08f"/>
+</svg>

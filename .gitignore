@@ -1,10 +1,19 @@
+# secrets: never committed (keys are read at run time from the environment)
 .env
 .env.*
+!.env.example
+*service-account*.json
+*-key.json
+oauth-client.json
+app-config.json
+google-session.bin
+
 node_modules
 dist
 out
 coverage
 release
 desktop/dist
+.vercel/
 *.log
 .DS_Store

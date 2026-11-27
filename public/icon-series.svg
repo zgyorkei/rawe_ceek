@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <title>Series</title>
+  <rect width="96" height="96" rx="22" fill="#1f2a24"/>
+  <rect x="20" y="24" width="56" height="52" rx="8" fill="none" stroke="#f4f1ea" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M20 40h56M36 18v12M60 18v12" stroke="#f4f1ea" stroke-width="6" stroke-linecap="round"/>
+  <path d="M33 66l9-11 7 7 14-16" fill="none" stroke="#7fb08f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

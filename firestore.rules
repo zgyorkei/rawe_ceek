@@ -1,0 +1,40 @@
+rules_version = '2';
+// Published in the Firebase console (Firestore > Rules), never deployed by a script. The data model is
+// src/lib/raceData.ts (RW.RESEARCH 6.2); these are the rules of RW.RESEARCH 6.3.
+//
+// Who writes what:
+//   series/**, meta/**   the desktop service only, as a service account (Google's IAM, which these rules do not
+//                        apply to). No client may write: `write: if false`.
+//   settings/**          the owner's page: the notification settings.
+//   pushSubscriptions/** the owner's page: one document per device.
+//   dueNotifications/**  the server only (the service writes, the Vercel sender reads): no client access.
+//   everything else      denied.
+//
+// BEFORE PUBLISHING: replace OWNER_UID_PLACEHOLDER below with your Firebase user id (Authentication > Users, after
+// your first Google sign-in), in the copy you paste into the console. Never commit the real uid: the test of
+// firestore.rules (test/rules.test.ts) fails when the file in the repository holds anything else. While the
+// placeholder stays, nobody is the owner and every read and write is refused.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner() {
+      return request.auth != null && request.auth.uid == 'OWNER_UID_PLACEHOLDER';
+    }
+
+    // Who may READ race data (series/** and meta/**): the ONE place the phone's read access is decided. Owner only
+    // for now (private use, the sources' terms limit redistribution). The open question is in the RW.SCAFFOLD report
+    // (RW.RESEARCH 6.3): changing the answer changes only this function.
+    function canRead() {
+      return isOwner();
+    }
+
+    match /series/{seriesId}/{document=**} { allow read: if canRead(); allow write: if false; }
+    match /meta/{document=**}              { allow read: if canRead(); allow write: if false; }
+
+    match /settings/{document=**}          { allow read, write: if isOwner(); }
+    match /pushSubscriptions/{document=**} { allow read, write: if isOwner(); }
+
+    // dueNotifications and anything the app adds later: denied until a rule above names it
+    match /{document=**} { allow read, write: if false; }
+  }
+}
