@@ -60,6 +60,39 @@ The desktop service writes `series/**`, `meta/**` and `dueNotifications/**` as a
 - Everything else is denied.
 - The read rule of race data is ONE function, `canRead()`, owner only for now. Who else may read it (a phone that is not signed in, a second family account) is not decided: RW.RESEARCH 6.3 gives the options, and the answer changes only that function.
 
+## The sync
+
+The desktop service's leased job `rawe-ceek-daily` (`service/rawe-ceek-daily.mjs`, the parts in `service/sync/`) reads each series from its own source and writes the documents above:
+
+| Series | Source (`service/sync/sources/`) |
+| --- | --- |
+| Formula 1 | Jolpica-F1 (schedule, results, standings), OpenF1's sessions for the session ends when it answers (`f1.mjs`) |
+| Formula 2, Formula 3 | the official sites' round and standings pages, their embedded data (`fia.mjs`) |
+| F1 Academy | the official site's embedded data (`f1academy.mjs`) |
+| FIA WEC | the official calendar files and classification pages (`wec.mjs`) |
+| Formula E | not yet (RW.DATA.FE) |
+
+- **When:** the calendars, a backfill of every past result not yet final, and the standings at 04:00 each day (the clock of the machine holding the lease); the results every 5 minutes while a session's results are due (from its start until its window after the end, then once an hour for a day); the standings again after each race or sprint result. A season document is written only when its content changed.
+- **Polite reading:** one request at a time, a pause between requests to the same site, the user agent `RaweCeek/0.1` with this repository's address. The recorded answers in `test/fixtures/` are what the tests read; the unit tests use no network.
+- **No AI on Formula 1, F2, F3, F1 Academy or Formula E content** (decision D3): their summaries are fixed text templates (`service/sync/texts.mjs`). The one AI step reads a WEC results or standings page whose layout the parser no longer knows, with Gemini, and only when you set its key on the PC (optional; without it the step is off):
+
+  ```powershell
+  [Environment]::SetEnvironmentVariable('RAWE_CEEK_GEMINI_API_KEY', '<the key>', 'User')
+  ```
+
+  The key is read from the environment at each call and sent only to Google's endpoint, in a header.
+- **What fails** (a source down, a page redesigned) is written to `meta/sync` beside the data, at most 20 entries, and the run goes on with the other series.
+
+The service's routes, at `http://127.0.0.1:47341/services/rawe-ceek-daily/` (the kit checks the page's origin):
+
+| Route | Answer |
+| --- | --- |
+| `GET /status` | the run under way, the last run and the last daily run (when, written, errors), whether the key file and the Gemini key are set (never their values or paths), the schedule and the series |
+| `POST /fetch-now` | `202` when a daily run started, `409` while a run is under way |
+| `GET /last` | the last run's time and outcome, or `null` |
+
+A leased service's routes answer only on the machine holding the lease. The page's This PC view reads them as the sync panel (the last fetch, the last daily run, the schedule, the errors, **Fetch now**); on a PC without the lease it says where the sync runs. desktop-kit 0.1.0's service has no tray of its own, so the panel stands in for the tray entries.
+
 ## The kits
 
 `desktop-kit` and `pwa-kit` are in `vendor/` as tarballs, pinned by `file:vendor/...` in `package.json`, because Vercel clones only this repository. **This is temporary:** once the kits have release tags (DK.RELEASE), `package.json` pins the tags instead, and `vendor/` and `scripts/kits-refresh.mjs` go. Until then, a newer kit is taken in by:
@@ -108,6 +141,12 @@ The desktop service writes the race data as a service account, never with a kept
 
    Only the path is in the variable. The service refuses to write while it is missing and never logs the key. Restart the service afterwards.
 
+4. Only if the Firestore database is not the project's `(default)` one, name it the same way:
+
+   ```powershell
+   [Environment]::SetEnvironmentVariable('RAWE_CEEK_FIRESTORE_DATABASE', '<the database id>', 'User')
+   ```
+
 ### 5. The first install
 
 Open the Vercel site in Chrome on the PC and choose **Install** (the button on This PC, or the install icon in the address bar). On an Android phone, Chrome's menu > **Add to home screen**. From then on the app updates itself: a new deployment shows the update line, and **Reload** takes it.
@@ -126,7 +165,7 @@ node bin/desktop-kit-service.mjs services on rawe-ceek-local
 
 The folder is where this repository is on that machine. Pages on `http://127.0.0.1:47341` need no `origins add`.
 
-- **The daily job** (`rawe-ceek-daily`) is leased: it runs only on the machine holding the app's lease, once a day whichever PCs have it on (desktop-kit's README, "The shared lease"). `node bin/desktop-kit-service.mjs lease` shows the setting. It is a skeleton now; RW.DATA fills it in with the sync, using `RAWE_CEEK_FIREBASE_KEY_FILE`.
+- **The data sync** (`rawe-ceek-daily`) is leased: it runs only on the machine holding the app's lease, however many PCs have it on (desktop-kit's README, "The shared lease"). `node bin/desktop-kit-service.mjs lease` shows the setting. It writes with `RAWE_CEEK_FIREBASE_KEY_FILE` (step 4); "The sync" above says what it does and when.
 - **The local service** (`rawe-ceek-local`) answers on its own PC only. Its key comes from an environment variable you set once on that PC, never from a key store or a file:
 
   ```powershell
